@@ -1,0 +1,49 @@
+// Closest Pair of Points .
+// Line Sweep Algorithm .
+// Given N numbers of 2-D points . Find out 2 points that there distance is minimum from all pairs .
+// Time Complexity O(N*log(N))
+#include <bits/stdc++.h>
+using namespace std;
+struct Point
+{
+    long long x ,y ;
+    bool operator < (const Point &P) const
+    {
+        if(x==P.x) return y < P.y ;
+        else return x < P.x ;
+    }
+}arr[100000+10];
+class compare
+{
+public:
+    bool operator () (const Point &A,const Point &B)
+    {
+        if(A.x==B.x) return A.y < B.y ;
+        else return A.x < B.x ;
+    }
+};
+long long dist(Point A,Point B)
+{
+    return (A.x-B.x)*(A.x-B.x)+(A.y-B.y)*(A.y-B.y);
+}
+double closestPair(int N)
+{
+    sort(arr,arr+N);
+    set <Point,compare> S ;
+    long long ans = 10000000000000000 ;
+    for(int i=0;i<N;i++)
+    {
+        while(!S.empty()&&(llabs(S.begin()->x-arr[i].x)>ans)) S.erase(S.begin());
+        for(set<Point,compare>::iterator it=S.begin();it!=S.end();it++) ans = min(ans,dist(arr[i],*it));
+        S.insert(arr[i]);
+    }
+    return (double) ans ;
+}
+int main()
+{
+    int N ; // N is the number of points .
+    cin >> N ;
+    for(int i=0;i<N;i++) cin >> arr[i].x >> arr[i].y ;
+    cout << setprecision(6) << fixed << sqrt(closestPair(N)) << endl ;
+    return 0;
+}
